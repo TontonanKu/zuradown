@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZuraDown - Pengunduh TikTok & YouTube</title>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <video id="splash-video" muted playsinline>
+            <source src="assets/splash_animation.mp4" type="video/mp4">
+            Video tidak didukung.
+        </video>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="assets/logo.png" alt="ZuraDown Logo">
+                <span class="logo-text">ZuraDown</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#how-to">Cara Mengunduh</a></li>
+                <li><a href="https://trakteer.id/zura-w/tip" target="_blank" class="donate-btn"><i class="fa-solid fa-mug-hot"></i> Tip / Donasi</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1 id="hero-title">ZuraDown <span class="highlight">Pengunduh</span></h1>
+                <p id="hero-desc">Unduh video TikTok tanpa watermark atau video YouTube dengan mudah.</p>
+                
+                <!-- Platform Selector -->
+                <div class="platform-selector">
+                    <button class="platform-btn active" id="btn-tiktok" onclick="selectPlatform('tiktok')">
+                        <i class="fa-brands fa-tiktok"></i> TikTok
+                    </button>
+                    <button class="platform-btn" id="btn-youtube" onclick="selectPlatform('youtube')">
+                        <i class="fa-brands fa-youtube"></i> YouTube
+                    </button>
+                </div>
+
+                <!-- Downloader Form -->
+                <div class="download-card">
+                    <div class="input-group">
+                        <i class="fa-solid fa-link input-icon"></i>
+                        <input type="text" id="url-input" placeholder="Tempel tautan TikTok di sini..." autocomplete="off">
+                        <div class="action-buttons">
+                            <button class="btn-paste" id="btn-paste" onclick="pasteFromClipboard()"><i class="fa-solid fa-paste"></i> Tempel</button>
+                            <button class="btn-download" id="btn-download"><span id="btn-text">Unduh</span> <i id="btn-spinner" class="fa-solid fa-spinner fa-spin hidden"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-container" class="loading-container hidden">
+                    <p>Sedang memuat media...</p>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Result Container -->
+                <div id="result-container" class="result-container hidden">
+                    <!-- Results injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Instructions Section -->
+        <section id="how-to" class="instructions">
+            <div class="container">
+                <h2>Cara Mengunduh Video <span id="instruction-platform-name">TikTok</span></h2>
+                <div class="steps-grid" id="steps-container">
+                    <!-- Steps will be injected by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="faq-section">
+            <div class="container">
+                <h2>Pertanyaan yang Sering Diajukan (FAQ)</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <button class="faq-question">Apakah layanan ini gratis?<i class="fa-solid fa-chevron-down"></i></button>
+                        <div class="faq-answer">
+                            <p>Ya, ZuraDown 100% gratis digunakan untuk mengunduh video dari TikTok maupun YouTube tanpa batasan apa pun.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">Apakah saya perlu menginstal aplikasi tambahan?<i class="fa-solid fa-chevron-down"></i></button>
+                        <div class="faq-answer">
+                            <p>Tidak perlu. Anda bisa menggunakan ZuraDown langsung dari browser bawaan di HP atau komputer Anda.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">Di mana video saya akan disimpan?<i class="fa-solid fa-chevron-down"></i></button>
+                        <div class="faq-answer">
+                            <p>Video Anda biasanya akan disimpan dalam folder "Unduhan" (Downloads) default pada perangkat atau browser Anda.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 ZuraDown. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
