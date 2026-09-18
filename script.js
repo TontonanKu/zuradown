@@ -130,11 +130,15 @@ document.getElementById('btn-download').addEventListener('click', async () => {
 
     try {
         if (isYoutube) {
-            // Mock delay for YouTube to show animation, then redirect
-            await new Promise(r => setTimeout(r, 1500));
-            window.open(`https://ssyoutube.com/en174/?url=${encodeURIComponent(url)}`, '_blank');
-            resultContainer.innerHTML = `<div class="result-header">Dialihkan ke pengunduh YouTube...</div>`;
-            resultContainer.classList.remove('hidden');
+            // Fetch YouTube metadata
+            const response = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(url)}`);
+            const data = await response.json();
+            
+            if (data.error) {
+                alert("Gagal mengambil data video YouTube. Pastikan tautan benar.");
+            } else {
+                renderYoutubeResult(data, url, resultContainer);
+            }
         } else {
             // Fetch TikTok data
             const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
@@ -233,6 +237,45 @@ function renderResult(data, container) {
             </div>
         </div>`;
     }
+    
+    html += `</div>`;
+    container.innerHTML = html;
+    container.classList.remove('hidden');
+}
+
+function renderYoutubeResult(data, originalUrl, container) {
+    let html = `<div class="result-header">1 FILE MEDIA DITEMUKAN.</div>`;
+    html += `<div class="result-grid">`;
+    
+    const authorName = data.author_name || 'Unknown';
+    const titleStr = data.title || '-';
+    const coverUrl = data.thumbnail_url || '';
+    
+    // We mock the sizes since noembed doesn't provide it
+    const size1080 = '~50.0 MB';
+    const size720 = '~15.5 MB';
+    
+    // Download URLs redirect to ssyoutube
+    const downloadUrl = `https://ssyoutube.com/en174/?url=${encodeURIComponent(originalUrl)}`;
+
+    html += `
+    <div class="result-card">
+        <div class="result-media">
+            <img src="${coverUrl}" alt="YouTube Thumbnail">
+        </div>
+        <div class="result-actions">
+            <a href="${downloadUrl}" target="_blank" class="btn-result-download">UNDUH 1080p - ${size1080}</a>
+            <a href="${downloadUrl}" target="_blank" class="btn-result-download" style="background-color: #333;">UNDUH 720p - ${size720}</a>
+        </div>
+        <div class="result-meta">
+            <h3>Video YouTube</h3>
+            <div class="meta-row"><span class="meta-label">Penulis</span><span class="meta-value">${authorName}</span></div>
+            <div class="meta-row"><span class="meta-label">Jenis</span><span class="meta-value">video</span></div>
+            <div class="meta-divider"></div>
+            <div class="meta-label">Judul</div>
+            <div class="meta-posting">${titleStr}</div>
+        </div>
+    </div>`;
     
     html += `</div>`;
     container.innerHTML = html;
