@@ -48,14 +48,14 @@ const platformData = {
             { icon: 'fa-solid fa-download', title: '3. Unduh', desc: 'Klik tombol "Unduh" dan tunggu beberapa saat hingga video siap diunduh tanpa watermark.' }
         ]
     },
-    youtube: {
-        name: 'YouTube',
-        placeholder: 'Tempel tautan YouTube di sini...',
-        color: 'var(--youtube-color)',
+    pinterest: {
+        name: 'Pinterest',
+        placeholder: 'Tempel tautan Pinterest di sini...',
+        color: 'var(--pinterest-color)',
         steps: [
-            { icon: 'fa-regular fa-copy', title: '1. Salin Tautan', desc: 'Buka YouTube, temukan video, klik tombol Bagikan, dan pilih "Salin Tautan".' },
-            { icon: 'fa-solid fa-paste', title: '2. Tempel Tautan', desc: 'Tempel tautan video YouTube ke kolom input pada situs web kami.' },
-            { icon: 'fa-solid fa-download', title: '3. Unduh', desc: 'Klik tombol "Unduh" untuk memilih resolusi dan format, lalu simpan ke perangkat Anda.' }
+            { icon: 'fa-regular fa-copy', title: '1. Salin Tautan', desc: 'Buka Pinterest, temukan video/foto, klik tombol Bagikan, dan pilih "Salin Tautan".' },
+            { icon: 'fa-solid fa-paste', title: '2. Tempel Tautan', desc: 'Tempel tautan video/foto Pinterest ke kolom input pada situs web kami.' },
+            { icon: 'fa-solid fa-download', title: '3. Unduh', desc: 'Klik tombol "Unduh" untuk memproses media, lalu simpan ke perangkat Anda.' }
         ]
     }
 };
@@ -63,13 +63,13 @@ const platformData = {
 function selectPlatform(platform) {
     // 1. Update Buttons
     const btnTiktok = document.getElementById('btn-tiktok');
-    const btnYoutube = document.getElementById('btn-youtube');
+    const btnPinterest = document.getElementById('btn-pinterest');
     
     if (platform === 'tiktok') {
         btnTiktok.classList.add('active');
-        btnYoutube.classList.remove('active');
+        btnPinterest.classList.remove('active');
     } else {
-        btnYoutube.classList.add('active');
+        btnPinterest.classList.add('active');
         btnTiktok.classList.remove('active');
     }
 
@@ -126,19 +126,16 @@ document.getElementById('btn-download').addEventListener('click', async () => {
     resultContainer.classList.add('hidden');
     resultContainer.innerHTML = '';
     
-    const isYoutube = document.getElementById('btn-youtube').classList.contains('active');
+    const isPinterest = document.getElementById('btn-pinterest').classList.contains('active');
 
     try {
-        if (isYoutube) {
-            // Fetch YouTube metadata
-            const response = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(url)}`);
-            const data = await response.json();
-            
-            if (data.error) {
-                alert("Gagal mengambil data video YouTube. Pastikan tautan benar.");
-            } else {
-                renderYoutubeResult(data, url, resultContainer);
-            }
+        if (isPinterest) {
+            // Mock delay for Pinterest to show animation, then redirect
+            await new Promise(r => setTimeout(r, 1500));
+            // Redirecting to a popular Pinterest downloader as there's no open CORS API for it
+            window.open(`https://pinterestdownloader.com/id?url=${encodeURIComponent(url)}`, '_blank');
+            resultContainer.innerHTML = `<div class="result-header">Dialihkan ke pengunduh Pinterest...</div>`;
+            resultContainer.classList.remove('hidden');
         } else {
             // Fetch TikTok data
             const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);

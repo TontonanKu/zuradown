@@ -6,7 +6,7 @@
     --primary-color: #ff6b00; /* Orange */
     --primary-hover: #e65c00;
     --tiktok-color: #ff6b00; 
-    --youtube-color: #ff6b00; /* Make YouTube also orange as requested */
+    --pinterest-color: #ff6b00; /* Unified orange */
     --border-radius: 12px;
     --transition-speed: 0.3s;
 }
@@ -194,10 +194,10 @@ body {
 }
 
 /* Active states for specific platforms */
-.platform-btn.active#btn-youtube {
-    border-color: var(--youtube-color);
+.platform-btn.active#btn-pinterest {
+    border-color: var(--pinterest-color);
     background-color: rgba(255, 107, 0, 0.1);
-    color: var(--youtube-color);
+    color: var(--pinterest-color);
 }
 
 /* Downloader Form */
