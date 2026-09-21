@@ -52,18 +52,17 @@ body {
     font-size: 1.2rem;
     font-weight: 700;
     color: #ffffff;
-    background-color: #C12C3D;
+    background-color: var(--primary-color);
     text-decoration: none;
     padding: 6px 16px;
     border-radius: 6px;
     transition: all var(--transition-speed);
-    text-transform: uppercase;
     letter-spacing: 0.5px;
-    border: none;
+    border: 1px solid var(--primary-color);
 }
 
 .btn-logo:hover {
-    background-color: #A32332;
+    background-color: var(--primary-hover);
     color: #fff;
     box-shadow: none;
 }
