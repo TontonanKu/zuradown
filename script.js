@@ -1,36 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Splash Screen Logic
-    const splashScreen = document.getElementById('splash-screen');
-    const splashVideo = document.getElementById('splash-video');
-
-    // Attempt to play video automatically
-    // Browsers often require videos to be muted for autoplay to work without interaction
-    splashVideo.play().catch(error => {
-        console.log("Autoplay blocked or failed:", error);
-        // If autoplay fails, hide splash screen immediately to not block the user
-        hideSplashScreen();
-    });
-
-    // When the video ends, hide the splash screen
-    splashVideo.addEventListener('ended', () => {
-        hideSplashScreen();
-    });
-
-    // Fallback: hide splash screen after 5 seconds just in case video doesn't fire 'ended' event
-    setTimeout(() => {
-        hideSplashScreen();
-    }, 5000);
-
-    function hideSplashScreen() {
-        if (!splashScreen.classList.contains('hidden')) {
-            splashScreen.classList.add('hidden');
-            // Wait for transition to finish then remove from DOM or just keep hidden
-            setTimeout(() => {
-                splashScreen.style.display = 'none';
-            }, 500); // matches CSS transition time
-        }
-    }
-
     // 2. Platform Switcher Logic
     // Initialize default UI (TikTok)
     renderInstructions('tiktok');
