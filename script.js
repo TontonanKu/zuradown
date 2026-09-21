@@ -130,12 +130,15 @@ document.getElementById('btn-download').addEventListener('click', async () => {
 
     try {
         if (isPinterest) {
-            // Mock delay for Pinterest to show animation, then redirect
-            await new Promise(r => setTimeout(r, 1500));
-            // Redirecting to a popular Pinterest downloader as there's no open CORS API for it
-            window.open(`https://pinterestdownloader.com/id?url=${encodeURIComponent(url)}`, '_blank');
-            resultContainer.innerHTML = `<div class="result-header">Dialihkan ke pengunduh Pinterest...</div>`;
-            resultContainer.classList.remove('hidden');
+            // Call our custom Vercel API
+            const response = await fetch(`/api/pinterest?url=${encodeURIComponent(url)}`);
+            const data = await response.json();
+            
+            if (data.error) {
+                alert(data.error);
+            } else {
+                renderPinterestResult(data, resultContainer);
+            }
         } else {
             // Fetch TikTok data
             const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
@@ -240,45 +243,6 @@ function renderResult(data, container) {
     container.classList.remove('hidden');
 }
 
-function renderYoutubeResult(data, originalUrl, container) {
-    let html = `<div class="result-header">1 FILE MEDIA DITEMUKAN.</div>`;
-    html += `<div class="result-grid">`;
-    
-    const authorName = data.author_name || 'Unknown';
-    const titleStr = data.title || '-';
-    const coverUrl = data.thumbnail_url || '';
-    
-    // We mock the sizes since noembed doesn't provide it
-    const size1080 = '~50.0 MB';
-    const size720 = '~15.5 MB';
-    
-    // Download URLs redirect to ssyoutube
-    const downloadUrl = `https://ssyoutube.com/en174/?url=${encodeURIComponent(originalUrl)}`;
-
-    html += `
-    <div class="result-card">
-        <div class="result-media">
-            <img src="${coverUrl}" alt="YouTube Thumbnail">
-        </div>
-        <div class="result-actions">
-            <a href="${downloadUrl}" target="_blank" class="btn-result-download">UNDUH 1080p - ${size1080}</a>
-            <a href="${downloadUrl}" target="_blank" class="btn-result-download" style="background-color: #333;">UNDUH 720p - ${size720}</a>
-        </div>
-        <div class="result-meta">
-            <h3>Video YouTube</h3>
-            <div class="meta-row"><span class="meta-label">Penulis</span><span class="meta-value">${authorName}</span></div>
-            <div class="meta-row"><span class="meta-label">Jenis</span><span class="meta-value">video</span></div>
-            <div class="meta-divider"></div>
-            <div class="meta-label">Judul</div>
-            <div class="meta-posting">${titleStr}</div>
-        </div>
-    </div>`;
-    
-    html += `</div>`;
-    container.innerHTML = html;
-    container.classList.remove('hidden');
-}
-
 // Paste from Clipboard
 async function pasteFromClipboard() {
     try {
@@ -290,6 +254,33 @@ async function pasteFromClipboard() {
         console.error('Failed to read clipboard contents: ', err);
         alert('Gagal menempelkan teks. Pastikan Anda memberikan izin akses clipboard pada browser.');
     }
+}
+
+function renderPinterestResult(data, container) {
+    let html = `<div class="result-header">1 FILE MEDIA DITEMUKAN.</div>`;
+    html += `<div class="result-grid">`;
+    
+    html += `
+    <div class="result-card">
+        <div class="result-media">
+            ${data.type === 'video' ? `<video src="${data.mediaUrl}" controls></video>` : `<img src="${data.mediaUrl}" alt="Pinterest Image">`}
+        </div>
+        <div class="result-actions">
+            <a href="${data.mediaUrl}" target="_blank" download class="btn-result-download">UNDUH ${data.type.toUpperCase()}</a>
+        </div>
+        <div class="result-meta">
+            <h3>Pinterest ${data.type === 'video' ? 'Video' : 'Foto'}</h3>
+            <div class="meta-row"><span class="meta-label">Penulis</span><span class="meta-value">${data.author}</span></div>
+            <div class="meta-row"><span class="meta-label">Jenis</span><span class="meta-value">${data.type}</span></div>
+            <div class="meta-divider"></div>
+            <div class="meta-label">Judul</div>
+            <div class="meta-posting">${data.title}</div>
+        </div>
+    </div>`;
+    
+    html += `</div>`;
+    container.innerHTML = html;
+    container.classList.remove('hidden');
 }
 
 // FAQ Accordion Logic
