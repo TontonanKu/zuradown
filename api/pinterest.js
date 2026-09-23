@@ -27,29 +27,42 @@ module.exports = async function handler(req, res) {
     const videoMatches = html.match(/https:\/\/v\.pinimg\.com\/videos\/[^\s"'\\]+\.mp4/g);
     const imageMatches = html.match(/https:\/\/i\.pinimg\.com\/originals\/[^\s"'\\]+\.(jpg|png)/g);
 
-    // Extract title/author from meta tags if possible
+    // Extract title
     let title = 'Pinterest Media';
-    const titleMatch = html.match(/<meta property="og:title" content="([^"]+)"/);
+    const titleMatch = html.match(/"headline":"([^"]+)"/i) || html.match(/<meta property="og:title" content="([^"]+)"/i) || html.match(/<title>([^<]+)<\/title>/i);
     if (titleMatch && titleMatch[1]) {
-        title = titleMatch[1];
+        title = titleMatch[1].replace(/ - Pinterest/i, '').trim();
+    }
+
+    // Extract author
+    let author = 'Pinterest User';
+    const authorMatch = html.match(/"author":"([^"]+)"/i) || html.match(/"name":"([^"]+)","@type":"Person"/i) || html.match(/<meta property="pinterestapp:pinner" content="([^"]+)"/i);
+    if (authorMatch && authorMatch[1]) {
+        author = authorMatch[1];
     }
 
     const result = {
       title: title,
-      author: 'Pinterest',
+      author: author,
       mediaUrl: null,
       type: 'unknown'
     };
 
     if (videoMatches && videoMatches.length > 0) {
       result.type = 'video';
-      // Pick the first unique video URL
       result.mediaUrl = [...new Set(videoMatches)][0]; 
-    } else if (imageMatches && imageMatches.length > 0) {
-      result.type = 'image';
-      result.mediaUrl = [...new Set(imageMatches)][0];
     } else {
-      return res.status(404).json({ error: 'Gagal menemukan video/foto di link ini.' });
+      // Find og:image for the main post image
+      const ogImageMatch = html.match(/<meta property="og:image" content="([^"]+)"/i);
+      if (ogImageMatch && ogImageMatch[1]) {
+          result.type = 'image';
+          result.mediaUrl = ogImageMatch[1];
+      } else if (imageMatches && imageMatches.length > 0) {
+          result.type = 'image';
+          result.mediaUrl = [...new Set(imageMatches)][0];
+      } else {
+          return res.status(404).json({ error: 'Gagal menemukan video/foto di link ini.' });
+      }
     }
 
     return res.status(200).json(result);

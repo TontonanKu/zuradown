@@ -1,0 +1,9 @@
+{
+  "name": "zuradown",
+  "version": "1.0.0",
+  "description": "ZuraDown TikTok and Pinterest downloader",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "dependencies": {}
+}
