@@ -166,7 +166,7 @@ function renderResult(data, container) {
                     <img src="${imgUrl}" alt="Photo ${index + 1}">
                 </div>
                 <div class="result-actions">
-                    <a href="${imgUrl}" target="_blank" download class="btn-result-download">UNDUH</a>
+                    <a href="/api/download?url=${encodeURIComponent(imgUrl)}" download class="btn-result-download">UNDUH</a>
                 </div>
                 <div class="result-meta">
                     <h3>Foto ${index + 1}</h3>
