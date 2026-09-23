@@ -53,13 +53,18 @@ module.exports = async function handler(req, res) {
       result.mediaUrl = [...new Set(videoMatches)][0]; 
     } else {
       // Find og:image for the main post image
-      const ogImageMatch = html.match(/<meta property="og:image" content="([^"]+)"/i);
+      const ogImageMatch = html.match(/<meta[^>]+(?:name|property)="og:image"[^>]+content="([^"]+)"/i) 
+                        || html.match(/<meta[^>]+content="([^"]+)"[^>]+(?:name|property)="og:image"/i)
+                        || html.match(/"image":"(https:\/\/i\.pinimg\.com\/originals\/[^"]+)"/i);
+      
       if (ogImageMatch && ogImageMatch[1]) {
           result.type = 'image';
           result.mediaUrl = ogImageMatch[1];
       } else if (imageMatches && imageMatches.length > 0) {
           result.type = 'image';
-          result.mediaUrl = [...new Set(imageMatches)][0];
+          // Filter out the generic gradient images if possible, or just pick the last one
+          const realImages = imageMatches.filter(img => !img.includes('d53b014d86a6b6761bf649a0ed813c2b'));
+          result.mediaUrl = realImages.length > 0 ? realImages[realImages.length - 1] : imageMatches[imageMatches.length - 1];
       } else {
           return res.status(404).json({ error: 'Gagal menemukan video/foto di link ini.' });
       }
