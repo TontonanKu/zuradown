@@ -109,7 +109,9 @@ document.getElementById('btn-download').addEventListener('click', async () => {
             }
         } else {
             // Fetch TikTok data
-            const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+            // TikWM sometimes fails to parse new TikTok '/photo/' URLs, so we silently convert it to '/video/'
+            const safeTiktokUrl = url.replace('/photo/', '/video/');
+            const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(safeTiktokUrl)}`);
             const data = await response.json();
             
             if (data.code === 0 && data.data) {
