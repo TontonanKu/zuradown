@@ -234,7 +234,7 @@ function renderPinterestResult(data, container) {
             ${data.type === 'video' ? `<video src="${data.mediaUrl}" controls></video>` : `<img src="${data.mediaUrl}" alt="Pinterest Image">`}
         </div>
         <div class="result-actions">
-            <a href="${data.mediaUrl}" target="_blank" download class="btn-result-download">UNDUH ${data.type.toUpperCase()}</a>
+            <a href="/api/download?url=${encodeURIComponent(data.mediaUrl)}" download class="btn-result-download">UNDUH ${data.type.toUpperCase()}</a>
         </div>
         <div class="result-meta">
             <h3>Pinterest ${data.type === 'video' ? 'Video' : 'Foto'}</h3>
