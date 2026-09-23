@@ -21,8 +21,15 @@ module.exports = async function handler(req, res) {
       if (contentType.includes('video/mp4')) ext = 'mp4';
       else if (contentType.includes('image/jpeg')) ext = 'jpg';
       else if (contentType.includes('image/png')) ext = 'png';
+      else if (contentType.includes('image/webp')) ext = 'webp';
       
-      const filename = `ZuraDown_Pinterest_${Date.now()}.${ext}`;
+      // Determine platform from URL
+      let platform = 'Pinterest';
+      if (url.includes('tiktok') || url.includes('tikwm') || url.includes('tiktokcdn')) {
+          platform = 'TikTok';
+      }
+      
+      const filename = `ZuraDown_${platform}_${Date.now()}.${ext}`;
   
       res.setHeader('Content-Type', contentType);
       // Force the browser to download the file instead of displaying it
